@@ -57,12 +57,12 @@ done
 printf "\n${R}Question 8: Now get the 10 largest exons of chr1 stored in example.bed${N}\n"
 grep "^chr1" $bed | cut -f11 | sed -e 's/,$//' | sed -e $'s/,/\\\n/g' | sort -nr | head -n 10
 
-printf "\n${R}Question 9: Now modify Q9 script to receive as a parameter the number of exons to search for.${N}\n"
+printf "\n${R}Question 9: Now modify Q8 script to receive as a parameter the number of exons to search for.${N}\n"
 chmod +x ./Q9.sh
 ./Q9.sh 5
 
 printf "\n${R}Question 10: Get the first 10 records of jan2017articles.csv with largest number of comments from the original csv file.${N}\n"
-awk -F'"' -v OFS='' '{ for (i=2; i<=NF; i+=2) gsub(",", "", $i) } {print $0}' $articles | cut -f5 -d ',' | sort -nr | head
+awk -F'"' -v OFS='' '{ for (i=2; i<=NF; i+=2) gsub(",", "", $i) } {print $0}' $articles | sort -nrt, -k5 | head -10
 
 printf "\n${R}Question 11: Modify your previous script to receive a number as a parameter N and then show the top N entries with more comments.${N}\n"
 chmod +x ./Q11.sh
