@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Assignment done by Jorge Pardillos and Martí Municoy.
+
 # Initial variables
 articles="jan2017articles.csv"
 bed="example.bed"
