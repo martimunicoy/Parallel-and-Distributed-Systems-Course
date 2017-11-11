@@ -32,10 +32,10 @@ entries=$(head $bed | cut -f11)
 printf "$entries\n"
 
 printf "\n${R}- How would you remove the last comma?${N}\n"
-printf "By using this expression: \"\${var%%?}\", where var is a variable containing the list of exons with the last comma that we want to remove.\n"
+printf "By using \"sed\" with the following argument: \"-e \'s/,\$//g\'\".\n"
 printf "In this way, by instance:\n"
 var=$(head -n1 $bed | cut -f11)
-var1=${var%?}
+var1=$(echo $var | sed -e 's/,$//g')
 printf "\t$var\n"
 printf "\t$var1\n"
 
@@ -47,7 +47,7 @@ do
   echo "${exons%?}" | awk -F ',' 'BEGIN{OFS="\n"} {$1=$1; print $0}' | sort -n | head -n 1
 done
 
-printf "\n${R}Question 7: How would you now sort the records so that the first number shown is th smallest exon size? Again, the answer must provide a sorted list of number for each line of the input.${N}\n"
+printf "\n${R}Question 7: How would you now sort the records so that the first number shown is the smallest exon size? Again, the answer must provide a sorted list of number for each line of the input.${N}\n"
 for exons in $entries;
 do
   sortedexons=$(echo "${exons%?}" | awk -F ',' 'BEGIN{OFS="\n"} {$1=$1; print $0}' | sort -n | awk 'BEGIN{ORS=","} {print}')
@@ -59,6 +59,7 @@ grep "^chr1" $bed | cut -f11 | sed -e 's/,$//' | sed -e $'s/,/\\\n/g' | sort -nr
 
 printf "\n${R}Question 9: Now modify Q8 script to receive as a parameter the number of exons to search for.${N}\n"
 chmod +x ./Q9.sh
+printf "By typing \"./Q9.sh 5\", where \"5\" is the parameter that specifies the number of exons to search for, we get the results from below.\n"
 ./Q9.sh 5
 
 printf "\n${R}Question 10: Get the first 10 records of jan2017articles.csv with largest number of comments from the original csv file.${N}\n"
@@ -66,6 +67,7 @@ awk -F'"' -v OFS='' '{ for (i=2; i<=NF; i+=2) gsub(",", "", $i) } {print $0}' $a
 
 printf "\n${R}Question 11: Modify your previous script to receive a number as a parameter N and then show the top N entries with more comments.${N}\n"
 chmod +x ./Q11.sh
+printf "By typing \"./Q11.sh 5\", where \"5\" is the parameter that specifies the number of entries to search for, we get the results from below.\n"
 ./Q11.sh 5
 
 printf "\n${R}Question 12: Now we are going to create a new articles.csv where we get a different output data layout using awk tool.${N}\n"
