@@ -1,0 +1,52 @@
+1.-
+It shows the all the entries from the table called sources
+
+2.-
+select gbId, description from Descriptions limit 5;
+
+3.-
+“SELECT count(*) from LocusLinks;” gives the number of entries in the table LocusLinks;
+
+4.-
+Select count(*) from Data;
+
+5.-
+Select level from Data where affyId=“U95-32123_at” and expt=1;
+
+6.-
+select * from Descriptions where Descriptions LIKE “%Human%”;
+
+7.-
+select * from GO_Descr where description LIKE "%protein kinase%" order by goAcc asc;
+
+8.-
+select Data.affyId from Data, Targets, Descriptions where Data.affyId=Targets.affyId and Targets.gbId=Descriptions.gbId and Descriptions.description LIKE "%kinase%";
+0 results
+Introduing:load data infile 'new.tsv' into table Descriptions; (The file is in the directory /var/lib/mysql/experiments/)
+select Data.affyId from Data, Targets, Descriptions where Data.affyId=Targets.affyId and Targets.gbId=Descriptions.gbId and Descriptions.description LIKE "%kinase%";
+It's still showing 0 results. There is an affyId corresponding to the gbId that we have introduced (M18228), but that affyId is not in the Data table.
+
+9.-
+select Distinct Data.affyId, UniSeqs.uId, UniDescr.description from Data, UniSeqs, UniDescr, Targets where UniDescr.uId=UniSeqs.uId and  UniSeqs.gbId=Targets.gbId and Targets.affyId=Data.affyId order by UniDescr.description desc limit 2;
+
+10.-
+select exptId , avg(level) from Data group by exptId;
+
+11.-
+select affyId, avg(level) from Data group by affyId;
+
+12.-
+From the table called "Data" it takes the entries with an affy-name beginning with the string "AFFX" and selects all of them for which the level number is 10 times bigger for an experiment than for some other experiments of the same affy-name.
+
+13.-
+select Targets.gbId, Descriptions.description, LocusDescr.description, GO_Descr.description from Targets, Descriptions, LocusDescr, LocusLinks, GO_Descr, Ontologies where Descriptions.gbId=Targets.gbId and Targets.gbId=LocusLinks.gbId and LocusLinks.linkId=LocusDescr.linkId and LocusLinks.linkId=Ontologies.linkId and Ontologies.goAcc=GO_Descr.goAcc ;
+
+Another, same result though...
+
+select Targets.gbId, Descriptions.description, LocusDescr.description, UniDescr.description from Targets, Descriptions, LocusDescr, LocusLinks, UniDescr, UniSeqs where Descriptions.gbId=Targets.gbId and Targets.gbId=LocusLinks.gbId and LocusLinks.linkId=LocusDescr.linkId and Targets.gbId=UniSeqs.gbId and Uni
+
+14.-
+select * from (select MY.species, GO_Descr.description from GO_Descr, (select LocusDescr.linkId as linkId, LocusDescr.species from LocusDescr UNION ALL select LocusLinks.linkId, Targets.species from LocusLinks, Targets where Targets.gbId=LocusLinks.gbId) as MY, Ontologies where Ontologies.linkId=MY.linkId and GO_Descr.goAcc=Ontologies.goAcc order by species ASC limit 5) as final into outfile '/tmp/14.out';
+
+
+
