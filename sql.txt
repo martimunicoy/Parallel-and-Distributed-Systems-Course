@@ -43,7 +43,7 @@ select Targets.gbId, Descriptions.description, LocusDescr.description, GO_Descr.
 
 Another, same result though...
 
-select Targets.gbId, Descriptions.description, LocusDescr.description, UniDescr.description from Targets, Descriptions, LocusDescr, LocusLinks, UniDescr, UniSeqs where Descriptions.gbId=Targets.gbId and Targets.gbId=LocusLinks.gbId and LocusLinks.linkId=LocusDescr.linkId and Targets.gbId=UniSeqs.gbId and Uni
+select Targets.gbId, Descriptions.description, LocusDescr.description, UniDescr.description from Targets, Descriptions, LocusDescr, UniDescr, LocusLinks, UniSeqs where Targets.gbId=Descriptions.gbId and Targets.gbId=LocusLinks.gbId and LocusLinks.linkId=LocusDescr.linkId and Targets.gbId=UniSeqs.gbId and UniSeqs.uId=UniDescr.uId;
 
 14.-
 select * from (select MY.species, GO_Descr.description from GO_Descr, (select LocusDescr.linkId as linkId, LocusDescr.species from LocusDescr UNION ALL select LocusLinks.linkId, Targets.species from LocusLinks, Targets where Targets.gbId=LocusLinks.gbId) as MY, Ontologies where Ontologies.linkId=MY.linkId and GO_Descr.goAcc=Ontologies.goAcc order by species ASC limit 5) as final into outfile '/tmp/14.out';
