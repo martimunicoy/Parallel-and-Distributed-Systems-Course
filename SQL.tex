@@ -1,0 +1,190 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{booktabs} %Tablas quedan mejor
+\usepackage{vmargin} %Márgenes
+\usepackage{hyperref}
+\setpapersize{A4}
+\setmargins{2.5cm}       % margen izquierdo
+{1.5cm}                        % margen superior
+{16.5cm}                      % anchura del texto
+{22.42cm}                    % altura del texto
+{10pt}                           % altura de los encabezados
+{1.5cm}                           % espacio entre el texto y los encabezados
+{0pt}                             % altura del pie de página
+{2cm}                           % espacio entre el texto y el pie de página
+
+\usepackage[none]{hyphenat} %No corta palabras al final de las lineas
+\usepackage{graphicx} %Imágenes
+\usepackage{subfigure} % subfiguras
+\graphicspath{{img/}} % Root for images
+\usepackage{wrapfig}
+\usepackage{siunitx} %Escribir números y unidades
+\usepackage{amsmath} %Mayor facilidad para escribir matrices y otros elementos matemáticos
+%\numberwithin{equation}{section} %En las ecuaciones se especifica también el capítulo
+\usepackage{xcolor} %Colores (\color{})
+\usepackage{lipsum}
+\usepackage{topcapt}
+\usepackage{parskip}
+\usepackage{braket}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{fancyhdr} %Cabeceras
+\pagestyle{fancy} % seleccionamos un estilo
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+
+\lhead{SQL assignment} %CAMBIA
+\rhead{Parallel and distributed systems} %CAMBIA
+
+
+
+
+
+\begin{document}
+
+\setstretch{1.3} % Line spacing of 1.5
+\setlength{\parskip}{5mm}
+
+\renewcommand{\tablename}{Table}
+
+\thispagestyle{empty} %Primera página sin número
+\begin{center}
+	
+	{\scshape\LARGE Parallel and distributed systems\par}
+	\vspace{0.5cm}
+	\rule{15cm}{0.8pt}\\
+	{\huge\bfseries SQL assignment\par}
+	\rule{15cm}{0.8pt}\\
+	\vspace{0.5cm}
+	{\large\itshape Martí Municoy, Jorge Pardillos\par}
+
+\end{center}
+\setcounter{page}{1} %Empezamos a contar los números
+
+
+
+\pagenumbering{arabic} %Ponemos números normales (árabes) ya
+\pagestyle{fancy} % seleccionamos un estilo
+
+
+\textbf{Q0. Can you describe the series of steps to open a database for querying?}
+\begin{enumerate}
+\item Open mysql: \emph{mysql -u root -p} (and type your password).
+\item Type \emph{show databases;} in order to explore the available databases.
+\item Type \emph{use A;} in order to start querying the database ``A''.
+\end{enumerate}
+
+
+\textbf{Q1. What is the purpose of this query?\\ SELECT * from Sources;}
+
+It shows the all the entries from the table called sources.
+
+\textbf{Q2. Get 5 GenBank ids and corresponding descriptions.}
+
+SELECT gbId, description FROM Descriptions LIMIT 5;
+
+\textbf{Q3. What is the purpose of this query?\\ SELECT count(*) from LocusLinks;}
+
+It gives the number of entries in the table LocusLinks;
+
+\textbf{Q4. How many different Affy ids are in the expression data?}
+
+SELECT count(*) FROM Data;
+
+\textbf{Q5. What is the expression level of Affy id U95-32123\_at in experiment number 1?}
+
+SELECT level FROM Data WHERE affyId=``U95-32123\_at''AND expt=1;
+
+\textbf{Q6. Find all the gene descriptions, along with their GenBank ids containing the word ``Human''?}
+
+SELECT * FROM Descriptions WHERE Descriptions LIKE ``\%Human\%'';
+
+\textbf{Q7. What Gene Ontology descriptions (and corresponding accession) contain the phrase ``protein kinase''? Answer should be provided in ascending order of accessions.}
+
+SELECT * FROM GO\_Descr WHERE description LIKE ``\%protein kinase\%'' ORDER BY goAcc ASC;
+
+\textbf{Q8. Which AffyId of table Data correspond to sequences in Targets table with the phrase ``kinase'' in their description? Use the following command:\\ LOAD DATA INFILE `file.tsv' INTO TABLE Targets;\\ To add a new entry in Descriptions with the string ``kinase'' and the gbId= ``M18228''. Now repeat the query again}
+
+SELECT Data.affyId\\
+FROM Data, Targets, Descriptions\\
+WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId AND Descriptions.description\\
+LIKE ``\%kinase\%'';
+
+This query gives 0 results.
+
+We introduce one extra entry to the table descriptions: \emph{load data infile `new.tsv' into table Descriptions;}. The file is in the directory /var/lib/mysql/experiments/.
+
+Repeating the same query again is still showing 0 results. There is an affyId corresponding to the gbId that we have introduced (M18228), but that affyId is not in the Data table.
+
+
+
+\textbf{Q9. Get two affyId, uId and descriptions in LocusDescr in reverse alphabetical order of descriptions}
+
+SELECT DISTINCT Data.affyId, UniSeqs.uId, UniDescr.description\\
+FROM Data, UniSeqs, UniDescr, Targets\\
+WHERE UniDescr.uId=UniSeqs.uId AND  UniSeqs.gbId=Targets.gbId AND Targets.affyId =Data.affyId\\
+ORDER BY UniDescr.description DESC\\
+LIMIT 2;
+
+\textbf{Q10. How would you find the average expression level of each experiment in Data?}
+
+SELECT exptId , AVG(level) FROM Data GROUP BY exptId;
+
+\textbf{Q11. What is the average expression level of each array probe (affyId) across all experiments?}
+
+SELECT affyId, AVG(level) FROM Data GROUP BY affyId;
+
+\textbf{Q12. What is the purpose of the following query?\\SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId,\\
+DataCopy.level, DataCopy.exptId\\FROM Data, Data DataCopy\\WHERE Data.level $>$ 10 * DataCopy.level\\AND Data.affyId=DataCopy.affyId\\AND Data.affyId LIKE ``AFFX\%''LIMIT 10;}
+
+From the table called ``Data'' it takes the entries with an affy-name beginning with the string ``AFFX'' and selects all of them for which the level number is 10 times bigger for an experiment than for some other experiments of the same affy-name.
+
+\textbf{Q13. Write a query to provide three different descriptions for all gbId in table Targets}
+
+There are four tables containing descriptions. Therefore there are 4 possible combinations and 4 possible outputs, depending on which three tables are chosen (Descriptions, LocusDescr, GO\_Descr or UniDescr).
+
+One option will be:
+
+SELECT Targets.gbId, Descriptions.description, LocusDescr.description, UniDescr.description\\
+FROM Targets, Descriptions, LocusDescr, UniDescr, LocusLinks, UniSeqs\\
+WHERE Targets.gbId=Descriptions.gbId AND Targets.gbId=LocusLinks.gbId\\
+AND LocusLinks.linkId=LocusDescr.linkId AND Targets.gbId=UniSeqs.gbId\\
+AND UniSeqs.uId=UniDescr.uId;
+
+\newpage
+
+\textbf{Q14. Write a query to provide all gene ontology (GO\_descr) descriptions related with all species in table Species sorted alphabetically and providing the first five results. Export the query to a tab-separated-file with the command:\\ SELECT * FROM TABLE INTO OUTFILE (`data.out');}
+
+SELECT * FROM (\\
+SELECT MY.species, GO\_Descr.description FROM GO\_Descr, (\\
+SELECT LocusDescr.linkId AS linkId, LocusDescr.species FROM LocusDescr\\
+UNION ALL\\
+SELECT LocusLinks.linkId, Targets.species FROM LocusLinks, Targets\\
+WHERE Targets.gbId=LocusLinks.gbId\\)
+AS MY, Ontologies WHERE Ontologies.linkId=MY.linkId AND GO\_Descr.goAcc=Ontologies.goAcc ORDER BY species ASC LIMIT 5\\
+) AS final INTO OUTFILE '/tmp/14.out';
+
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
