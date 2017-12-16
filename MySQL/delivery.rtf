@@ -1,0 +1,297 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red5\green61\blue204;\red230\green230\blue230;\red0\green0\blue0;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c33896\c83855;\csgenericrgb\c90196\c90196\c90196;\csgenericrgb\c0\c0\c0\c85000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww12560\viewh16000\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0  
+\b Q0. Can you describe the series of steps to open a database for querying? 
+\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf2 > 	mysql -u user -p password\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\pardirnatural\partightenfactor0
+\cf2 mysql>	CREATE DATABASE experiments;\
+mysql>	QUIT;\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardeftab720\sl264\slmult1\pardirnatural\partightenfactor0
+\cf2 >	mysql -u user -p password < experiments.sql\
+mysql>	USE experiments;\cf0 \
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\b \cf0 Q1. What is the purpose of this query?\
+
+\b0 mysql>	SELECT * FROM Sources;\
+\cf2 It asks for all the table fields of the table called Sources.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------+-------------+\
+| exptId | source      |\
++--------+-------------+\
+| 1      | Pancreas    |\
+| 2      | Liver       |\
+| 4      | Human Liver |\
++--------+-------------+\
+3 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
+\
+
+\b \cf0 Q2. Get 5 GenBank ids and corresponding descriptions.\
+\pard\pardeftab720\partightenfactor0
+
+\b0 \cf2 mysql>	select * from descriptions limit 5;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------+-------------------------------------------+\
+| gbId   | description                               |\
++--------+-------------------------------------------+\
+| A00142 | granulysin                                |\
+| A00146 | lypase, gastric                           |\
+| A03911 | seryne (or cysteine) proteinase inhibitor |\
+| A06977 | albumin                                   |\
+| A12027 | S100 calcium binding protein A8           |\
++--------+-------------------------------------------+\
+5 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\b \cf0 Q3. What is the purpose of this query?\
+
+\b0 mysql>	SELECT COUNT(*) FROM LocusLinks;\
+\cf2 It counts the total number of rows of the table LocusLinks.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +----------+\
+| count(*) |\
++----------+\
+|       22 |\
++----------+\
+1 row in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
+\
+
+\b \cf0 Q4. How many different Affy ids are in the expression data?\
+
+\b0 \cf2 mysql>	SELECT COUNT(affyId) FROM Data;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +---------------+\
+| count(affyId) |\
++---------------+\
+|            37 |\
++---------------+\
+1 row in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\
+
+\b Q5. What is the expression level of Affy id U95-32123_at in experiment number 1?\
+
+\b0 \cf2 mysql>	SELECT level FROM Data WHERE affyId="U95-32123_at" AND exptId=1;\
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +-------+\
+| level |\
++-------+\
+|   128 |\
++-------+\
+1 row in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+\
+
+\b Q6. Find all the gene descriptions, along with their GenBank ids containing the word \'93Human\'94.\
+
+\b0 \cf2 mysql>	SELECT * FROM Descriptions WHERE description LIKE "%Human%";\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------+---------------------------------------------------------+\
+| gbId   | description                                             |\
++--------+---------------------------------------------------------+\
+| A12345 | HSLFBPS7 Human fructose-1, 6-biphosphatase              |\
+| A12346 | HSU30872 Human mitosin mRNA                             |\
+| A12347 | HSU33052 Human lipid-activated protein kinase           |\
+| A12348 | HSU33053 Human lipid-activated protein kinase           |\
+| A12349 | Human clone lambda 5 semaphorin mRNA                    |\
+| A22124 | Human rearranged immunoglobulin lambda light chain mRNA |\
+| A22127 | Human rearranged immunoglobulin lambda light chain mRNA |\
++--------+---------------------------------------------------------+\
+7 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf0 \cb1 \CocoaLigature1 \
+
+\b Q7. What Gene Ontology descriptions (and corresponding accession) contain the phrase \'93protein kinase\'94?\
+
+\b0 \cf2 mysql>	SELECT * FROM GO_Descr WHERE description LIKE \'93%protein kinase%";\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +---------+----------------+\
+| goAcc   | description    |\
++---------+----------------+\
+| 0001236 | protein kinase |\
+| 0001237 | protein kinase |\
+| 1112222 | protein kinase |\
+| 4442222 | protein kinase |\
++---------+----------------+\
+4 rows in set (0,00 sec)\
+\
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\b \cf0 Q8. Which AffyId of table Data correspond to sequences in Targets table with the phrase \'93kinase\'94 in their description?\
+
+\b0 \cf2 mysql>	SELECT Data.affyId FROM Data, Targets, Descriptions WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 Empty set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\b\fs24 \cf0 \cb1 \CocoaLigature1 \
+Use the following command:\
+LOAD DATA INFILE \'91file.tsv\'92 INTO TABLE Targets;\
+To add a new entry in Descriptions with the string \'93kinase\'94 and the gbId= \'93M18228\'94\
+Now repeat the query again.\
+
+\b0 \cf2 mysql>	SELECT Data.affyId FROM Data, Targets, Descriptions WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId;\
+\
+\
+
+\b \cf0 Q9. Get two affyId, uId and descriptions in LocusDescr in reverse alphabetical order of descriptions.\
+
+\b0 \cf2 mysql>	SELECT Targets.affyId, UniSeqs.uId, LocusDescr.description FROM LocusDescr, LocusLinks, Targets, UniSeqs WHERE UniSeqs.gbId=LocusLinks.gbId AND Targets.gbId=LocusLinks.gbId AND LocusLinks.linkId=LocusDescr.linkId ORDER BY description DESC;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------------+--------+-------------+\
+| affyId       | uId    | description |\
++--------------+--------+-------------+\
+| U95_40474_at | Hs1691 | Glucan      |\
+| U95_32123_at | Hs1640 | Collagen    |\
++--------------+--------+-------------+\
+2 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
+
+\b \cf0 Q10. How would you find the average expression level of each experiment in Data?\
+
+\b0 \cf2 mysql>	SELECT exptId, AVG(level) FROM Data GROUP BY exptId;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------+------------+\
+| exptId | AVG(level) |\
++--------+------------+\
+| 1      |   125.3333 |\
+| 2      |    95.3333 |\
+| 3      |   126.3333 |\
+| 4      |    83.5000 |\
+| 5      |    92.7500 |\
+| 6      |    18.3333 |\
+| 7      |    20.0000 |\
+| 8      |    40.0000 |\
+| 9      |    20.0000 |\
++--------+------------+\
+9 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\b\fs24 \cf0 \cb1 \CocoaLigature1 \
+Q11. What is the average expression level of each array probe (affyId) across all experiments?\
+
+\b0 \cf2 mysql>	SELECT affyId, AVG(level) FROM Data GROUP BY affyId;\
+
+\b \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\b0\fs20 \cf3 \cb4 \CocoaLigature0 +---------------------------+------------+\
+| affyId                    | AVG(level) |\
++---------------------------+------------+\
+| 31315_at                  |   250.0000 |\
+| 31324_at                  |    91.0000 |\
+| 31325_at                  |    89.0000 |\
+| 31356_at                  |    91.0000 |\
+| 31362_at                  |   260.0000 |\
+| 31510_s_at                |   257.0000 |\
+| 5321_at                   |    90.0000 |\
+| 5322_at                   |    90.0000 |\
+| 5323_at                   |    90.0000 |\
+| 5324_at                   |    73.5000 |\
+| 5325_at                   |    90.0000 |\
+| AFFX-BioB-3_at            |    97.0000 |\
+| AFFX-BioB-5_at            |    20.0000 |\
+| AFFX-BioB-M_at            |    62.8000 |\
+| AFFX-HSAC07/X00351_M_at   |    86.0000 |\
+| AFFX-HUMBAPDH/M33197_3_st |   277.0000 |\
+| AFFX-HUMTFFR/M11507_at    |    90.0000 |\
+| AFFX-M27830_3_at          |   271.0000 |\
+| AFFX-MurIL10_at           |     6.6667 |\
+| AFFX-MurIL2_at            |    20.0000 |\
+| AFFX-MurIL4_at            |    49.0000 |\
+| U95-32123_at              |   128.0000 |\
+| U98-40474_at              |    57.0000 |\
++---------------------------+------------+\
+23 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\b\fs24 \cf0 \cb1 \CocoaLigature1 \
+Q12. What is the purpose of the following query?\
+
+\b0 mysql>	SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId, DataCopy.level, DataCopy.exptId\
+FROM Data, Data DataCopy\
+mysql>	WHERE Data.level > 10 * DataCopy.level\
+mysql>	AND Data.affyId=DataCopy.affyId AND Data.affyId LIKE "AFFX%" LIMIT 10;\
+
+\b \
+
+\b0 \cf2 It shows up the first ten affyIds which start with \'93AFFX\'94 and whose levels are 10 times higher than other affyId\'92s levels. \
+
+\b \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\b0\fs20 \cf3 \cb4 \CocoaLigature0 +----------------+-------+--------+----------------+-------+--------+\
+| affyId         | level | exptId | affyId         | level | exptId |\
++----------------+-------+--------+----------------+-------+--------+\
+| AFFX-BioB-M_at |   214 | 5      | AFFX-BioB-M_at |    20 | 3      |\
+| AFFX-BioB-M_at |   214 | 5      | AFFX-BioB-M_at |    20 | 7      |\
+| AFFX-BioB-M_at |   214 | 5      | AFFX-BioB-M_at |    20 | 9      |\
++----------------+-------+--------+----------------+-------+--------+\
+3 rows in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\b\fs24 \cf0 \cb1 \CocoaLigature1 \
+Q13. Write a query to provide three different descriptions for all gbId in table Targets\
+
+\b0 mysql>	SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId, DataCopy.level, DataCopy.exptId\
+FR}

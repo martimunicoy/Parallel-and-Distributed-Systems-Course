@@ -4,6 +4,7 @@
 \usepackage{booktabs} %Tablas quedan mejor
 \usepackage{vmargin} %Márgenes
 \usepackage{hyperref}
+\usepackage[T1]{fontenc}
 \setpapersize{A4}
 \setmargins{2.5cm}       % margen izquierdo
 {1.5cm}                        % margen superior
@@ -139,8 +140,14 @@ SELECT exptId , AVG(level) FROM Data GROUP BY exptId;
 
 SELECT affyId, AVG(level) FROM Data GROUP BY affyId;
 
-\textbf{Q12. What is the purpose of the following query?\\SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId,\\
-DataCopy.level, DataCopy.exptId\\FROM Data, Data DataCopy\\WHERE Data.level $>$ 10 * DataCopy.level\\AND Data.affyId=DataCopy.affyId\\AND Data.affyId LIKE ``AFFX\%''LIMIT 10;}
+\textbf{Q12. What is the purpose of the following query?\\
+SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId,\\
+DataCopy.level, DataCopy.exptId\\
+FROM Data, Data DataCopy\\
+WHERE Data.level $>$ 10 * DataCopy.level\\
+AND Data.affyId=DataCopy.affyId\\
+AND Data.affyId LIKE ``AFFX\%''
+LIMIT 10;}
 
 From the table called ``Data'' it takes the entries with an affy-name beginning with the string ``AFFX'' and selects all of them for which the level number is 10 times bigger for an experiment than for some other experiments of the same affy-name.
 
