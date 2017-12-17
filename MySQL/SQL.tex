@@ -265,7 +265,7 @@ mysql>	 SELECT exptId, AVG(level) FROM Data GROUP BY exptId;
 
 \pagebreak
 
-\textbf{Q11. What is the average expression level of each array probe (affyId) across all experiments?}
+\textbf{Q11. What is the average expression level of each array probe (\textit{affyId}) across all experiments?}
 
 \color{blue}
 \begin{verbatim}
@@ -300,7 +300,7 @@ From the table called "\textit{Data}" it takes the entries with an \textit{affyI
 \end{figure}
 
 
-\textbf{Q13. Write a query to provide three different descriptions for all gbId in table Targets}
+\textbf{Q13. Write a query to provide three different descriptions for all \textit{gbId} in table \textit{Targets}.}
 
 \color{blue}
 There are four tables containing descriptions. Therefore, there are 4 possible combinations and 4 possible outputs, depending on which three tables are chosen (\textit{Descriptions}, \textit{LocusDescr}, \textit{GO\_Descr} or \textit{UniDescr}).
@@ -323,7 +323,7 @@ mysql>	 AND Ontologies.goAcc=GO_Descr.goAcc;
 \end{figure}
 
 
-\textbf{Q14. Write a query to provide all gene ontology (GO\_descr) descriptions related with all species in table Species sorted alphabetically and providing the first five results. Export the query to a tab-separated-file with the command:}
+\textbf{Q14. Write a query to provide all gene ontology (\textit{GO\_descr}) descriptions related with all species in table \textit{Species} sorted alphabetically and providing the first five results. Export the query to a tab-separated-file with the command:}
 
 \begin{verbatim}
 mysql>	 SELECT * FROM TABLE INTO OUTFILE 'data.out';
