@@ -291,7 +291,7 @@ mysql>	 LIMIT 10;
 \end{verbatim}
 
 \color{blue}
-From the table called "\textit{Data}" it takes the entries with an \textit{affyId} beginning with the string "\textit{AFFX}". Then, it selects those whose levels are ten times higher than the levels of other experiments of the same \textit{affyId}. Finally, it shows up the first ten matchs.
+From the table called "\textit{Data}" it takes the entries with an \textit{affyId} beginning with the string "\textit{AFFX}". Then, it selects those whose levels are ten times higher than the levels of other experiments of the same \textit{affyId}. Finally, it shows up the first ten matches.
 \color{black}
 
 \begin{figure}[H]
@@ -331,13 +331,16 @@ mysql>	 SELECT * FROM TABLE INTO OUTFILE 'data.out';
 
 \color{blue}
 \begin{verbatim}
-mysql>	 SELECT GO_Descr.description, Targets.species
-mysql>	 FROM GO_Descr, Ontologies, LocusLinks, Targets
-mysql>	 WHERE GO_Descr.goAcc=Ontologies.goAcc
-mysql>	 AND Ontologies.linkId=LocusLinks.linkId
-mysql>	 AND LocusLinks.gbId=Targets.gbId
-mysql>	 ORDER BY GO_Descr.description ASC LIMIT 5
-mysql>	 INTO OUTFILE '14.out';
+mysql>	 SELECT * FROM(
+mysql>	 SELECT MY.species, GO_Descr.description FROM GO_Descr, (
+mysql>	 SELECT LocusDescr.linkId, LocusDescr.species FROM LocusDescr
+mysql>	 UNION
+mysql>	 SELECT LocusLinks.linkId, Targets.species
+mysql>	 FROM LocusLinks, Targets where Targets.gbId=LocusLinks.gbId
+mysql>	 ) AS MY, Ontologies
+mysql>	 WHERE Ontologies.linkId=MY.linkId AND GO_Descr.goAcc=Ontologies.goAcc
+mysql>	 ORDER BY species ASC LIMIT 5
+mysql>	 ) AS FINAL INTO OUTFILE '14.out';
 \end{verbatim}
 \color{black}
 
