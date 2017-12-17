@@ -4,7 +4,7 @@
 }
 {\*\expandedcolortbl;;\cssrgb\c0\c33896\c83855;\csgenericrgb\c90196\c90196\c90196;\csgenericrgb\c0\c0\c0\c85000;
 }
-\paperw11900\paperh16840\margl1440\margr1440\vieww12560\viewh16000\viewkind0
+\paperw11900\paperh16840\margl1440\margr1440\vieww25400\viewh16000\viewkind0
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0  
@@ -45,7 +45,7 @@ mysql>	USE experiments;\cf0 \
 \b \cf0 Q2. Get 5 GenBank ids and corresponding descriptions.\
 \pard\pardeftab720\partightenfactor0
 
-\b0 \cf2 mysql>	select * from descriptions limit 5;\
+\b0 \cf2 mysql>	SELECT * FROM Descriptions LIMIT 5;\
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
 
@@ -144,9 +144,9 @@ mysql>	USE experiments;\cf0 \
 
 \f0\fs24 \cf0 \cb1 \CocoaLigature1 \
 
-\b Q7. What Gene Ontology descriptions (and corresponding accession) contain the phrase \'93protein kinase\'94?\
+\b Q7. What Gene Ontology descriptions (and corresponding accession) contain the phrase "protein kinase\'94?\
 
-\b0 \cf2 mysql>	SELECT * FROM GO_Descr WHERE description LIKE \'93%protein kinase%";\
+\b0 \cf2 mysql>	SELECT * FROM GO_Descr WHERE description LIKE "%protein kinase%";\
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
 
@@ -160,13 +160,14 @@ mysql>	USE experiments;\cf0 \
 +---------+----------------+\
 4 rows in set (0,00 sec)\
 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf2 \cb1 \CocoaLigature1 \
 \pard\pardeftab720\sl264\slmult1\partightenfactor0
 
 \b \cf0 Q8. Which AffyId of table Data correspond to sequences in Targets table with the phrase \'93kinase\'94 in their description?\
 
-\b0 \cf2 mysql>	SELECT Data.affyId FROM Data, Targets, Descriptions WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId\
+\b0 \cf2 mysql>	SELECT Data.affyId FROM Data, Targets, Descriptions WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId AND Descriptions.description LIKE "%kinase%";\
 \
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
 
@@ -180,8 +181,15 @@ LOAD DATA INFILE \'91file.tsv\'92 INTO TABLE Targets;\
 To add a new entry in Descriptions with the string \'93kinase\'94 and the gbId= \'93M18228\'94\
 Now repeat the query again.\
 
-\b0 \cf2 mysql>	SELECT Data.affyId FROM Data, Targets, Descriptions WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId;\
+\b0 \cf2 mysql>	SELECT Data.affyId FROM Data, Targets, Descriptions WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId AND Descriptions.description LIKE "%kinase%";\
 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 Empty set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
 \
 
 \b \cf0 Q9. Get two affyId, uId and descriptions in LocusDescr in reverse alphabetical order of descriptions.\
@@ -293,5 +301,38 @@ mysql>	AND Data.affyId=DataCopy.affyId AND Data.affyId LIKE "AFFX%" LIMIT 10;\
 \f0\b\fs24 \cf0 \cb1 \CocoaLigature1 \
 Q13. Write a query to provide three different descriptions for all gbId in table Targets\
 
-\b0 mysql>	SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId, DataCopy.level, DataCopy.exptId\
-FR}
+\b0 \cf2 mysql>	select Targets.gbId, Descriptions.description as General_Description, LocusDescr.description as Locus_Description, GO_Descr.description as GO_Description from Targets, Descriptions, LocusDescr, LocusLinks, GO_Descr, Ontologies where Descriptions.gbId=Targets.gbId and Targets.gbId=LocusLinks.gbId and LocusLinks.linkId=LocusDescr.linkId and LocusLinks.linkId=Ontologies.linkId and Ontologies.goAcc=GO_Descr.goAcc;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------+---------------------+-------------------+----------------+\
+| gbId   | General_Description | Locus_Description | GO_Description |\
++--------+---------------------+-------------------+----------------+\
+| S75295 | Glucan              | Glucan            | Glucan Enz     |\
++--------+---------------------+-------------------+----------------+\
+1 row in set (0,00 sec)\
+\
+\pard\pardeftab720\sl264\slmult1\partightenfactor0
+
+\f0\b\fs24 \cf0 \cb1 \CocoaLigature1 \
+Q14. Write a query to provide all gene ontology (GO_descr) descriptions related with all species in table Species sorted alphabetically and providing the first five results.\
+
+\b0 \cf2 mysql>	SELECT GO_Descr.description, Targets.species FROM GO_Descr, Ontologies, LocusLinks, Targets WHERE GO_Descr.goAcc=Ontologies.goAcc AND Ontologies.linkId=LocusLinks.linkId AND LocusLinks.gbId=Targets.gbId ORDER BY GO_Descr.description ASC LIMIT 5;\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f1\fs20 \cf3 \cb4 \CocoaLigature0 +--------------------------------------------+---------+\
+| description                                | species |\
++--------------------------------------------+---------+\
+| extracellular space                        | Hs      |\
+| fructose-2, 6-biophosphatase 2-phosphatase | Hs      |\
+| Glucan Enz                                 | Hs      |\
+| protein kinase                             | Hs      |\
+| protein kinase                             | Hs      |\
++--------------------------------------------+---------+\
+5 rows in set (0,00 sec)\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \cb1 \CocoaLigature1 \
+}

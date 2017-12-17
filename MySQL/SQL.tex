@@ -30,6 +30,9 @@
 \usepackage{braket}
 \usepackage{setspace}
 \usepackage{listings}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{float}
 \usepackage{fancyhdr} %Cabeceras
 \pagestyle{fancy} % seleccionamos un estilo
 
@@ -48,7 +51,7 @@
 
 \begin{document}
 
-\setstretch{1.3} % Line spacing of 1.5
+\setstretch{1} % Line spacing of 1.5
 \setlength{\parskip}{5mm}
 
 \renewcommand{\tablename}{Table}
@@ -75,123 +78,273 @@
 
 \textbf{Q0. Can you describe the series of steps to open a database for querying?}
 \begin{enumerate}
-\item Open mysql: \emph{mysql -u root -p} (and type your password).
-\item Type \emph{show databases;} in order to explore the available databases.
-\item Type \emph{use A;} in order to start querying the database ``A''.
+\color{blue}
+\item Open \textit{MySQL} and type your password:
+\begin{verbatim}
+mysql -u root -p
+\end{verbatim}
+\item In order to explore the available databases, type:
+\begin{verbatim}
+mysql>	 show databases;
+\end{verbatim}
+\item To choose a specific database, for instance called \textit{A}, type:
+\begin{verbatim}
+mysql>	 use A;
+\end{verbatim}
+\color{black}
 \end{enumerate}
 
 
-\textbf{Q1. What is the purpose of this query?\\ SELECT * from Sources;}
+\textbf{Q1. What is the purpose of this query?}
 
-It shows the all the entries from the table called sources.
+\begin{verbatim}
+mysql>	 SELECT * from Sources;
+\end{verbatim}
+\textcolor{blue}{It provides us with all the table entries of the table called \textit{Sources}.}
 
-\textbf{Q2. Get 5 GenBank ids and corresponding descriptions.}
-
-SELECT gbId, description FROM Descriptions LIMIT 5;
-
-\textbf{Q3. What is the purpose of this query?\\ SELECT count(*) from LocusLinks;}
-
-It gives the number of entries in the table LocusLinks;
-
-\textbf{Q4. How many different Affy ids are in the expression data?}
-
-SELECT count(*) FROM Data;
-
-\textbf{Q5. What is the expression level of Affy id U95-32123\_at in experiment number 1?}
-
-SELECT level FROM Data WHERE affyId=``U95-32123\_at''AND expt=1;
-
-\textbf{Q6. Find all the gene descriptions, along with their GenBank ids containing the word ``Human''?}
-
-SELECT * FROM Descriptions WHERE Descriptions LIKE ``\%Human\%'';
-
-\textbf{Q7. What Gene Ontology descriptions (and corresponding accession) contain the phrase ``protein kinase''? Answer should be provided in ascending order of accessions.}
-
-SELECT * FROM GO\_Descr WHERE description LIKE ``\%protein kinase\%'' ORDER BY goAcc ASC;
-
-\textbf{Q8. Which AffyId of table Data correspond to sequences in Targets table with the phrase ``kinase'' in their description? Use the following command:\\ LOAD DATA INFILE `file.tsv' INTO TABLE Targets;\\ To add a new entry in Descriptions with the string ``kinase'' and the gbId= ``M18228''. Now repeat the query again}
-
-SELECT Data.affyId\\
-FROM Data, Targets, Descriptions\\
-WHERE Data.affyId=Targets.affyId AND Targets.gbId=Descriptions.gbId AND Descriptions.description\\
-LIKE ``\%kinase\%'';
-
-This query gives 0 results.
-
-We introduce one extra entry to the table descriptions: \emph{load data infile `new.tsv' into table Descriptions;}. The file is in the directory /var/lib/mysql/experiments/.
-
-Repeating the same query again is still showing 0 results. There is an affyId corresponding to the gbId that we have introduced (M18228), but that affyId is not in the Data table.
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q1.png}
+\centering
+\end{figure}
 
 
+\pagebreak
 
-\textbf{Q9. Get two affyId, uId and descriptions in LocusDescr in reverse alphabetical order of descriptions}
+\textbf{Q2. Get 5 \textit{GenBank} ids and corresponding \textit{descriptions}.}
 
-SELECT DISTINCT Data.affyId, UniSeqs.uId, UniDescr.description\\
-FROM Data, UniSeqs, UniDescr, Targets\\
-WHERE UniDescr.uId=UniSeqs.uId AND  UniSeqs.gbId=Targets.gbId AND Targets.affyId =Data.affyId\\
-ORDER BY UniDescr.description DESC\\
-LIMIT 2;
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT gbId, description FROM Descriptions LIMIT 5;
+\end{verbatim}
+\color{black}
 
-\textbf{Q10. How would you find the average expression level of each experiment in Data?}
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q2.png}
+\centering
+\end{figure}
 
-SELECT exptId , AVG(level) FROM Data GROUP BY exptId;
+
+\textbf{Q3. What is the purpose of this query?}
+
+\begin{verbatim}
+mysql>	 SELECT count(*) from LocusLinks;
+\end{verbatim}
+\color{blue}
+It counts the total number of entries in the table \textit{LocusLinks}.
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q3.png}
+\centering
+\end{figure}
+
+
+\textbf{Q4. How many different \textit{Affy} ids are in the expression data?}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT COUNT(affyId) FROM Data;
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q4.png}
+\centering
+\end{figure}
+
+
+\textbf{Q5. What is the expression level of \textit{Affy} id \textit{U95-32123\_at} in experiment number 1?}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT level FROM Data WHERE affyId="U95-32123_at" AND exptId=1;
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q5.png}
+\centering
+\end{figure}
+
+
+\textbf{Q6. Find all the gene \textit{descriptions}, along with their \textit{GenBank} ids containing the word "\textit{Human}"?}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT * FROM Descriptions WHERE description LIKE "%Human%";
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q6.png}
+\centering
+\end{figure}
+
+
+\textbf{Q7. What \textit{Gene Ontology descriptions} (and corresponding \textit{accession}) contain the phrase "\textit{protein kinase}"? Answer should be provided in ascending order of accessions.}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT * FROM GO_Descr WHERE description LIKE "%protein kinase%"
+mysql>	 ORDER BY goAcc ASC;
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q7.png}
+\centering
+\end{figure}
+
+
+\textbf{Q8. Which \textit{AffyId} of table \textit{Data} correspond to sequences in \textit{Targets} table with the phrase "\textit{kinase}" in their \textit{description}?}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT Data.affyId FROM Data, Targets, Descriptions
+mysql>	 WHERE Data.affyId=Targets.affyId
+mysql>	 AND Targets.gbId=Descriptions.gbId
+mysql>	 AND Descriptions.description LIKE "%kinase%";
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q8.png}
+\centering
+\end{figure}
+
+
+\textbf{Use the following command:}
+
+\begin{verbatim}
+LOAD DATA INFILE `file.tsv' INTO TABLE Targets;
+\end{verbatim}
+ 
+ 
+\textbf{To add a new entry in \textit{Descriptions} with the string "\textit{kinase}" and the \textit{gbId="M18228"}. Now repeat the query again.}
+
+\color{blue}
+Repeating the same query again is still showing 0 results. There is an \textit{affyId} corresponding to the \textit{gbId} that we have introduced (\textit{M18228}), but that \textit{affyId} is not in the \textit{Data} table.
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q8.png}
+\centering
+\end{figure}
+
+
+\textbf{Q9. Get two \textit{affyId}, \textit{uId} and \textit{descriptions} in \textit{LocusDescr} in reverse alphabetical order of \textit{descriptions}.}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT Targets.affyId, UniSeqs.uId, LocusDescr.description
+mysql>	 FROM LocusDescr, LocusLinks, Targets, UniSeqs 
+mysql>	 WHERE UniSeqs.gbId=LocusLinks.gbId AND Targets.gbId=LocusLinks.gbId
+mysql>	 AND LocusLinks.linkId=LocusDescr.linkId ORDER BY description DESC LIMIT 2;
+\end{verbatim}
+\color{black}
+ 
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q9.png}
+\centering
+\end{figure}
+
+
+\textbf{Q10. How would you find the average expression level of each experiment in \textit{Data}?}
+
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT exptId, AVG(level) FROM Data GROUP BY exptId;
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q10.png}
+\centering
+\end{figure}
+
+
+\pagebreak
 
 \textbf{Q11. What is the average expression level of each array probe (affyId) across all experiments?}
 
-SELECT affyId, AVG(level) FROM Data GROUP BY affyId;
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT affyId, AVG(level) FROM Data GROUP BY affyId;
+\end{verbatim}
+\color{black}
 
-\textbf{Q12. What is the purpose of the following query?\\
-SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId,\\
-DataCopy.level, DataCopy.exptId\\
-FROM Data, Data DataCopy\\
-WHERE Data.level $>$ 10 * DataCopy.level\\
-AND Data.affyId=DataCopy.affyId\\
-AND Data.affyId LIKE ``AFFX\%''
-LIMIT 10;}
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q11.png}
+\centering
+\end{figure}
 
-From the table called ``Data'' it takes the entries with an affy-name beginning with the string ``AFFX'' and selects all of them for which the level number is 10 times bigger for an experiment than for some other experiments of the same affy-name.
+
+\textbf{Q12. What is the purpose of the following query?}
+\begin{verbatim}
+mysql>	 SELECT Data.affyId, Data.level, Data.exptId, DataCopy.affyId,
+mysql>	 DataCopy.level, DataCopy.exptId
+mysql>	 FROM Data, Data DataCopy
+mysql>	 WHERE Data.level > 10 * DataCopy.level
+mysql>	 AND Data.affyId=DataCopy.affyId
+mysql>	 AND Data.affyId LIKE "AFFX%''
+mysql>	 LIMIT 10;
+\end{verbatim}
+
+\color{blue}
+From the table called "\textit{Data}" it takes the entries with an \textit{affyId} beginning with the string "\textit{AFFX}". Then, it selects those whose levels are ten times higher than the levels of other experiments of the same \textit{affyId}. Finally, it shows up the first ten matchs.
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q12.png}
+\centering
+\end{figure}
+
 
 \textbf{Q13. Write a query to provide three different descriptions for all gbId in table Targets}
 
-There are four tables containing descriptions. Therefore there are 4 possible combinations and 4 possible outputs, depending on which three tables are chosen (Descriptions, LocusDescr, GO\_Descr or UniDescr).
+\color{blue}
+There are four tables containing descriptions. Therefore, there are 4 possible combinations and 4 possible outputs, depending on which three tables are chosen (\textit{Descriptions}, \textit{LocusDescr}, \textit{GO\_Descr} or \textit{UniDescr}).
+One of the possibilities is the following one:
+\begin{verbatim}
+mysql>	 SELECT Targets.gbId, Descriptions.description AS General_Description,
+mysql>	 LocusDescr.description AS Locus_Description,
+mysql>	 GO_Descr.description AS GO_Description
+mysql>	 FROM Targets, Descriptions, LocusDescr, LocusLinks, GO_Descr, Ontologies
+mysql>	 WHERE Descriptions.gbId=Targets.gbId
+mysql>	 AND Targets.gbId=LocusLinks.gbId AND LocusLinks.linkId=LocusDescr.linkId
+mysql>	 AND LocusLinks.linkId=Ontologies.linkId
+mysql>	 AND Ontologies.goAcc=GO_Descr.goAcc;
+\end{verbatim}
+\color{black}
 
-One option will be:
-
-SELECT Targets.gbId, Descriptions.description, LocusDescr.description, UniDescr.description\\
-FROM Targets, Descriptions, LocusDescr, UniDescr, LocusLinks, UniSeqs\\
-WHERE Targets.gbId=Descriptions.gbId AND Targets.gbId=LocusLinks.gbId\\
-AND LocusLinks.linkId=LocusDescr.linkId AND Targets.gbId=UniSeqs.gbId\\
-AND UniSeqs.uId=UniDescr.uId;
-
-\newpage
-
-\textbf{Q14. Write a query to provide all gene ontology (GO\_descr) descriptions related with all species in table Species sorted alphabetically and providing the first five results. Export the query to a tab-separated-file with the command:\\ SELECT * FROM TABLE INTO OUTFILE (`data.out');}
-
-SELECT * FROM (\\
-SELECT MY.species, GO\_Descr.description FROM GO\_Descr, (\\
-SELECT LocusDescr.linkId AS linkId, LocusDescr.species FROM LocusDescr\\
-UNION ALL\\
-SELECT LocusLinks.linkId, Targets.species FROM LocusLinks, Targets\\
-WHERE Targets.gbId=LocusLinks.gbId\\)
-AS MY, Ontologies WHERE Ontologies.linkId=MY.linkId AND GO\_Descr.goAcc=Ontologies.goAcc ORDER BY species ASC LIMIT 5\\
-) AS final INTO OUTFILE '/tmp/14.out';
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q13.png}
+\centering
+\end{figure}
 
 
+\textbf{Q14. Write a query to provide all gene ontology (GO\_descr) descriptions related with all species in table Species sorted alphabetically and providing the first five results. Export the query to a tab-separated-file with the command:}
 
+\begin{verbatim}
+mysql>	 SELECT * FROM TABLE INTO OUTFILE 'data.out';
+\end{verbatim}
 
+\color{blue}
+\begin{verbatim}
+mysql>	 SELECT GO_Descr.description, Targets.species
+mysql>	 FROM GO_Descr, Ontologies, LocusLinks, Targets
+mysql>	 WHERE GO_Descr.goAcc=Ontologies.goAcc
+mysql>	 AND Ontologies.linkId=LocusLinks.linkId
+mysql>	 AND LocusLinks.gbId=Targets.gbId
+mysql>	 ORDER BY GO_Descr.description ASC LIMIT 5
+mysql>	 INTO OUTFILE '14.out';
+\end{verbatim}
+\color{black}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{Q14.png}
+\centering
+\end{figure}
 
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
