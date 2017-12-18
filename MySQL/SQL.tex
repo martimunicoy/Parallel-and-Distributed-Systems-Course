@@ -331,16 +331,16 @@ mysql>	 SELECT * FROM TABLE INTO OUTFILE 'data.out';
 
 \color{blue}
 \begin{verbatim}
-mysql>	 SELECT * FROM(
-mysql>	 SELECT MY.species, GO_Descr.description FROM GO_Descr, (
-mysql>	 SELECT LocusDescr.linkId, LocusDescr.species FROM LocusDescr
+mysql>	 SELECT * FROM
+mysql>	 ( SELECT MY.species, GO_Descr.description FROM GO_Descr,
+mysql>	 ( SELECT LocusDescr.linkId, LocusDescr.species FROM LocusDescr
 mysql>	 UNION
 mysql>	 SELECT LocusLinks.linkId, Targets.species
-mysql>	 FROM LocusLinks, Targets where Targets.gbId=LocusLinks.gbId
-mysql>	 ) AS MY, Ontologies
+mysql>	 FROM LocusLinks, Targets where Targets.gbId=LocusLinks.gbId )
+mysql>	 AS MY, Ontologies
 mysql>	 WHERE Ontologies.linkId=MY.linkId AND GO_Descr.goAcc=Ontologies.goAcc
-mysql>	 ORDER BY species ASC LIMIT 5
-mysql>	 ) AS FINAL INTO OUTFILE '14.out';
+mysql>	 ORDER BY species ASC LIMIT 5 )
+mysql>	 AS FINAL INTO OUTFILE '14.out';
 \end{verbatim}
 \color{black}
 
